@@ -41,6 +41,7 @@ class MoviesController < ApplicationController
   # POST /movies.json
   def create
     @movie = Movie.new(params[:movie])
+    @movie.user = current_user
 
     respond_to do |format|
       if @movie.save
@@ -78,6 +79,15 @@ class MoviesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to movies_url }
       format.json { head :no_content }
+    end
+  end
+
+  def movies_by_user
+    @movies = current_user.movies
+
+    respond_to do |format|
+      format.html { render :template => "movies/index" }
+      format.json { render json: @movies }
     end
   end
 end
