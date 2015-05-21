@@ -90,4 +90,14 @@ class MoviesController < ApplicationController
       format.json { render json: @movies }
     end
   end
+
+  def movies_by_date
+    @movies = current_user.movies.order('created_at DESC').all
+
+    respond_to do |format|
+      format.html { render :template => "movies/index" }
+      format.json { render json: @movies }
+    end
+  end
+
 end

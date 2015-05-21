@@ -1,5 +1,7 @@
 <h1>Listing movies</h1>
 
+<h2>Sort By: <%= link_to "Date", movies_by_date_path %></h2>
+
 <table>
   <tr>
     <th>Title</th>
@@ -17,6 +19,9 @@
       <td><%= link_to 'Show', movie %></td>
       <td><%= link_to 'Edit', edit_movie_path(movie) %></td>
       <td><%= link_to 'Destroy', movie, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <% else %>
+      <td><%= link_to 'Like', movie %></td>
+      <td><%= link_to 'Hate', movie %></td>
     <% end %>
   </tr>
 <% end %>
