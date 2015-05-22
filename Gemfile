@@ -8,6 +8,21 @@ gem 'rails', '3.2.17'
 gem 'pg'
 gem 'devise'
 
+group :development do
+
+  gem 'pry'
+  gem 'pry-byebug'
+  gem 'pry-rails'
+  gem 'pry-debugger'
+  gem 'pry-stack_explorer'
+  gem 'annotate'
+  gem 'quiet_assets'
+  gem 'better_errors', '~> 1.1.0'
+  gem 'binding_of_caller'
+  gem 'meta_request'
+  gem "letter_opener"
+end
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do

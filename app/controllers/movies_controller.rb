@@ -1,8 +1,13 @@
 class MoviesController < ApplicationController
   # GET /movies
   # GET /movies.json
+
+  @@user_movies = false
+  # @@user = current_user
   def index
     @movies = Movie.all
+    @@user_movies = false
+    @@user = current_user
 
     respond_to do |format|
       format.html # index.html.erb
@@ -42,6 +47,8 @@ class MoviesController < ApplicationController
   def create
     @movie = Movie.new(params[:movie])
     @movie.user = current_user
+    @movie.likes = 0
+    @movie.hates = 0
 
     respond_to do |format|
       if @movie.save
@@ -84,6 +91,8 @@ class MoviesController < ApplicationController
 
   def movies_by_user
     @movies = current_user.movies
+    @@user_movies = true
+    @@user = current_user
 
     respond_to do |format|
       format.html { render :template => "movies/index" }
@@ -91,8 +100,51 @@ class MoviesController < ApplicationController
     end
   end
 
+  def filter_by_user
+    usr = User.find(params[:user_id])
+    @movies = usr.movies
+    @@user_movies = true
+    @@user = usr
+
+    respond_to do |format|
+      format.html { render :template => "movies/index" }
+      format.json { render json: @movies }
+    end
+
+  end
+
   def movies_by_date
-    @movies = current_user.movies.order('created_at DESC').all
+    if @@user_movies
+      @movies = @@user.movies.order('created_at DESC').all
+    else
+      @movies = Movie.order('created_at DESC').all
+    end
+
+    respond_to do |format|
+      format.html { render :template => "movies/index" }
+      format.json { render json: @movies }
+    end
+  end
+
+  def movies_by_likes
+    if @@user_movies
+      @movies = @@user.movies.order('likes DESC').all
+    else
+      @movies = Movie.order('likes DESC').all
+    end
+
+    respond_to do |format|
+      format.html { render :template => "movies/index" }
+      format.json { render json: @movies }
+    end
+  end
+
+  def movies_by_hates
+    if @@user_movies
+      @movies = @@user.movies.order('hates DESC').all
+    else
+      @movies = Movie.order('hates DESC').all
+    end
 
     respond_to do |format|
       format.html { render :template => "movies/index" }

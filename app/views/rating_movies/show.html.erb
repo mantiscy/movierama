@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Like:</b>
+  <%= @rating_movie.like %>
+</p>
+
+<p>
+  <b>Hate:</b>
+  <%= @rating_movie.hate %>
+</p>
+
+
+<%= link_to 'Edit', edit_rating_movie_path(@rating_movie) %> |
+<%= link_to 'Back', rating_movies_path %>

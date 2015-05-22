@@ -1,33 +1,68 @@
+
+
 <h1>Listing movies</h1>
+<div class='sort'>
+  <div class='sort_options'>Sort By: <%= link_to "Date", movies_by_date_path %> | <%= link_to "Likes", movies_by_likes_path %> | <%= link_to "Hates", movies_by_hates_path %></div>
+  <div class='options'>
+    <%= link_to 'Show all movies', movies_path %>
+    <% if current_user %>
+      <%= link_to 'New Movie', new_movie_path %>
+    <% end %>
+  </div>
+</div>
 
-<h2>Sort By: <%= link_to "Date", movies_by_date_path %></h2>
 
-<table>
-  <tr>
-    <th>Title</th>
-    <th>Description</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
 
 <% @movies.each do |movie| %>
-  <tr>
-    <td><%= movie.title %></td>
-    <td><%= movie.description %></td>
-    <% if current_user == movie.user %>
-      <td><%= link_to 'Show', movie %></td>
-      <td><%= link_to 'Edit', edit_movie_path(movie) %></td>
-      <td><%= link_to 'Destroy', movie, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-    <% else %>
-      <td><%= link_to 'Like', movie %></td>
-      <td><%= link_to 'Hate', movie %></td>
+  <% like_count = 0 %>
+  <% hate_count = 0 %>
+  <div class='movie_content'>
+    <div class='movie_title'><%= movie.title %></div class='movie_title'>
+    <div>Posted by <%= link_to movie.user.name, filter_by_user_path(user_id: movie.user), user: movie.user %> <%= (Date.current - movie.created_at.to_date).to_i %> days ago.</div>
+    <div class='movie_description'><%= movie.description %></div>
+
+      <% if !current_user %>
+        <div><%= movie.likes %> likes |</div>
+        <div><%= movie.hates %> hates</div>
+      <% else %>
+        <% if movie.rating_movies != [] %>
+
+          <% if movie.user != current_user %>
+              <% if movie.rating_movies.find_by_user_id(current_user) != nil %>
+                <% if movie.rating_movies.find_by_user_id(current_user.id).like %>
+                  <div><%= movie.likes %> likes</div>
+                  <div><%= link_to "#{movie.hates} hates", add_rating_hate_path(movie_id: movie), movie: movie %></div>
+                  <div>You LIKE this movie!</div>
+                  <div><%= link_to 'Unlike', remove_like_path(movie_id: movie), movie: movie %></div>
+                <% else movie.rating_movies.find_by_user_id(current_user.id).hate %>
+                  <div><%= link_to "#{movie.likes} likes", add_rating_like_path(movie_id: movie), movie: movie %></div>
+                  <div><%= movie.hates %> hates</div>
+                  <div>You HATE this movie!</div>
+                  <div><%= link_to 'Unhate', remove_hate_path(movie_id: movie), movie: movie %></div>
+                <% end %>
+              <% else %>
+                  <div><%= link_to "#{movie.likes} likes", add_rating_like_path(movie_id: movie), movie: movie %></div>
+                  <div><%= link_to "#{movie.hates} hates", add_rating_hate_path(movie_id: movie), movie: movie %></div>
+              <% end %>
+        <% elsif movie.user != current_user %>
+          <div><%= link_to "#{movie.likes} likes", add_rating_like_path(movie_id: movie), movie: movie %></div>
+          <div><%= link_to "#{movie.hates} hates", add_rating_hate_path(movie_id: movie), movie: movie %></div>
+        <% else %>
+          <div><%= movie.likes %> likes |</div>
+          <div><%= movie.hates %> hates</div>
+        <% end %>
+      <% elsif current_user && movie.user != current_user %>
+        <div><%= link_to "#{movie.likes} likes", add_rating_like_path(movie_id: movie), movie: movie %></div>
+        <div><%= link_to "#{movie.hates} hates", add_rating_hate_path(movie_id: movie), movie: movie %></div>
+      <% else %>
+        <div><%= movie.likes %> likes |</div>
+        <div><%= movie.hates %> hates</div>
+      <% end %>
     <% end %>
-  </tr>
+
+  </div>
 <% end %>
-</table>
+
 
 <br />
-<% if current_user %>
-  <%= link_to 'New Movie', new_movie_path %> | <%= link_to 'Show all movies', movies_path %>
-<% end %>
+

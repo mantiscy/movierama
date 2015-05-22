@@ -1,0 +1,25 @@
+<h1>Listing rating_movies</h1>
+
+<table>
+  <tr>
+    <th>Like</th>
+    <th>Hate</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @rating_movies.each do |rating_movie| %>
+  <tr>
+    <td><%= rating_movie.like %></td>
+    <td><%= rating_movie.hate %></td>
+    <td><%= link_to 'Show', rating_movie %></td>
+    <td><%= link_to 'Edit', edit_rating_movie_path(rating_movie) %></td>
+    <td><%= link_to 'Destroy', rating_movie, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Rating movie', new_rating_movie_path %>
