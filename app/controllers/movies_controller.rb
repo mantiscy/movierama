@@ -53,7 +53,8 @@ class MoviesController < ApplicationController
 
     respond_to do |format|
       if @movie.save
-        format.html { render action: :index, notice: 'Movie was successfully created.' }
+        flash[:notice] = 'Movie was successfully created.'
+        format.html { redirect_to action: "index" }
         format.json { render json: @movie, status: :created, location: @movie }
       else
         format.html { render action: "new" }
